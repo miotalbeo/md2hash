@@ -19,7 +19,7 @@ const PI_SUBST: [u8; 256] = [
     31, 26, 219, 153, 141, 51, 159, 17, 131, 20
 ]; 
 
-pub fn pad_to_16(m: Vec<u8>) -> Vec<u8> {
+fn pad_to_16(m: Vec<u8>) -> Vec<u8> {
     let mut output_vec = m.clone();
     let m_len = m.len();
     let padding_len = 16 - (m_len % 16);
@@ -30,7 +30,7 @@ pub fn pad_to_16(m: Vec<u8>) -> Vec<u8> {
     output_vec
 }
 
-pub fn append_checksum(m: Vec<u8>) -> Vec<u8> {
+fn append_checksum(m: Vec<u8>) -> Vec<u8> {
     let mut checksum: Vec<u8> = vec![0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     let n = m.len();
     let mut l = 0;
@@ -47,7 +47,7 @@ pub fn append_checksum(m: Vec<u8>) -> Vec<u8> {
     output_vec
 }
 
-pub fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
+fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
     let mut x = vec![
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -82,3 +82,43 @@ pub fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
     output
 }
 
+pub fn hash(m: Vec<u8>) -> Vec<u8> {
+    calculate_hash(
+        append_checksum(
+            pad_to_16(
+                m
+            )
+        )
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_hello_correctness() {
+        let l = hash("hello".to_string().into_bytes());
+
+        let l = format!("{:02x?}", l);
+        let l = l.replace("[", "");
+        let l = l.replace("]", "");
+        let l = l.replace(",", "");
+        let l = l.replace(" ", "");
+
+        assert_eq!(l, "a9046c73e00331af68917d3804f70655");
+    }
+
+    #[test]
+    fn check_emptystring_correctness() {
+        let l = hash("".to_string().into_bytes());
+
+        let l = format!("{:02x?}", l);
+        let l = l.replace("[", "");
+        let l = l.replace("]", "");
+        let l = l.replace(",", "");
+        let l = l.replace(" ", "");
+
+        assert_eq!(l, "8350e5a3e24c153df2275c9f80692773");
+    }
+}

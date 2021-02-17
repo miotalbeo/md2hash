@@ -1,14 +1,36 @@
+use std::env;
+use std::process;
+
 mod md2;
+mod utility;
 
 fn main() {
-    let l = md2::pad_to_16("hello".to_string().into_bytes());
-    let l = md2::append_checksum(l);
-    let l = md2::calculate_hash(l);
+    let args: Vec<String> = env::args().collect();
 
-    let l = format!("{:02x?}", l);
-    let l = l.replace("[", "");
-    let l = l.replace("]", "");
-    let l = l.replace(",", "");
-    let l = l.replace(" ", "");
-    println!("{}", l);
+    if args.len() == 1 {
+        utility::usage_no_args(&args[0]);
+        process::exit(1);
+    }
+
+    let switch = args[1].clone();
+
+    if switch != "f" && switch != "s" {
+        utility::usage_no_args(&args[0]);
+        process::exit(1);
+    }
+
+    if args.len() == 2 {
+        utility::usage_with_switch(&args[0], &args[1]);
+        process::exit(1);
+    }
+
+    if args.len() == 3 && switch == "f" {
+        utility::hash_file(args[2]);
+        process::exit(0);
+    }
+
+    if args.len() >= 3 && switch == "s" {
+        utility::hash_string(&args[2..].iter().cloned().collect());
+        process::exit(0);
+    }
 }
