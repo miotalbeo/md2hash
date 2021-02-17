@@ -90,7 +90,7 @@ fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
 
         let mut t = 0;
 
-        for j in 0..18u8 {
+        for j in 0..18 {
             for k in 0..48 {
                 // k can be left as usize as it
                 // is only used for indexing
@@ -100,7 +100,7 @@ fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
                 t = x[k] as u32;
             }
 
-            t += j as u32;
+            t += j;
             t %= 256;
         }
     }
