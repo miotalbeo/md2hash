@@ -1,5 +1,3 @@
-use std::str;
-
 const PI_SUBST: [u8; 256] = [
     41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6,
     19, 98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188,
@@ -90,15 +88,20 @@ fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
             x[32 + j] = x[16 + j] ^ x[j];
         }
 
-        let mut t: usize = 0;
+        let mut t = 0;
 
-        for j in 0..18 {
+        for j in 0..18u8 {
             for k in 0..48 {
-                t = (x[k] ^ PI_SUBST[t as usize]) as usize;
-                x[k] = x[k] ^ PI_SUBST[t as usize];
+                // k can be left as usize as it
+                // is only used for indexing
+                //t = (x[k] ^ PI_SUBST[t]) as usize;
+                //x[k] = x[k] ^ PI_SUBST[t];
+                x[k] ^= PI_SUBST[t as usize];
+                t = x[k] as u32;
             }
 
-            t = (t + j) % 256
+            t += j as u32;
+            t %= 256;
         }
     }
 
