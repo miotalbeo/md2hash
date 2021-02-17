@@ -25,12 +25,12 @@ fn main() {
     }
 
     if args.len() == 3 && switch == "f" {
-        utility::hash_file(args[2]);
+        utility::hash_file(args[2].clone());
         process::exit(0);
     }
 
     if args.len() >= 3 && switch == "s" {
-        utility::hash_string(&args[2..].iter().cloned().collect());
+        utility::hash_string(args[2..].iter().cloned().collect());
         process::exit(0);
     }
 }

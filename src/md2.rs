@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 const PI_SUBST: [u8; 256] = [
     41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6,
     19, 98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188,
@@ -19,6 +20,7 @@ const PI_SUBST: [u8; 256] = [
     31, 26, 219, 153, 141, 51, 159, 17, 131, 20
 ]; 
 
+#[allow(dead_code)]
 fn pad_to_16(m: Vec<u8>) -> Vec<u8> {
     let mut output_vec = m.clone();
     let m_len = m.len();
@@ -30,6 +32,7 @@ fn pad_to_16(m: Vec<u8>) -> Vec<u8> {
     output_vec
 }
 
+#[allow(dead_code)]
 fn append_checksum(m: Vec<u8>) -> Vec<u8> {
     let mut checksum: Vec<u8> = vec![0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     let n = m.len();
@@ -47,6 +50,7 @@ fn append_checksum(m: Vec<u8>) -> Vec<u8> {
     output_vec
 }
 
+#[allow(dead_code)]
 fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
     let mut x = vec![
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -82,6 +86,7 @@ fn calculate_hash(m: Vec<u8>) -> Vec<u8> {
     output
 }
 
+#[allow(dead_code)]
 pub fn hash(m: Vec<u8>) -> Vec<u8> {
     calculate_hash(
         append_checksum(

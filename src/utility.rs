@@ -1,7 +1,8 @@
+use std::fs;
 use std::fs::File;
 use std::io::Read;
 
-mod md2;
+#[path = "md2.rs"] mod md2;
 
 pub fn usage_no_args(binary: &String) {
     println!("Usage: {} f/s [filename or string]", binary);
@@ -31,11 +32,21 @@ pub fn hash_file(filename: String) {
 }
 
 pub fn hash_string(strings: Vec<String>) {
-    
+    let string = strings.join(" ");
+    let string = string.into_bytes();
+
+    let string = md2::hash(string);
+    let string = format!("{:02x?}", string);
+    let string = string.replace("[", "");
+    let string = string.replace("]", "");
+    let string = string.replace(",", "");
+    let string = string.replace(" ", "");
+
+    println!("{}", string);
 }
 
 fn read_file(filename: String) -> Vec<u8> {
-    let mut f = File::open().expect("Invalid filename");
+    let mut f = File::open(&filename).expect("Invalid filename");
     let metadata = fs::metadata(&filename).expect("Unable to read metadata");
     let mut buffer = vec![0; metadata.len() as usize];
     f.read(&mut buffer).expect("Buffer overflow");
