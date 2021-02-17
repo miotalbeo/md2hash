@@ -40,6 +40,9 @@ fn main() {
 
     let l = pad_to_16("hello".to_string().into_bytes());
     println!("{:?}", l);
+
+    let l = append_checksum(l);
+    println!("{:?}", l);
 }
 
 fn pad_to_16(s: Vec<u8>) -> Vec<u8> {
@@ -53,3 +56,33 @@ fn pad_to_16(s: Vec<u8>) -> Vec<u8> {
     output_vec
 }
 
+fn append_checksum(m: Vec<u8>) -> Vec<u8> {
+    // C[i] represents ith element of checksum
+    // S[i] represents ith element of PI_SUBST
+    // L represents l
+    // N represents number of bytes of m
+
+    // For i = 0 to 15 do
+    //  Set C[i] to 0
+    // end
+    let mut checksum = vec![0 as u8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let n = m.len();
+    // Set L to 0.
+    let mut l = 0;
+    let mut output_vec = m.clone();
+
+    // For i = 0 to N/16 - 1 do
+    for i in 0..n/16 {
+        // For j = 0 to 15 do
+        for j in 0..16 {
+            // Set c to M[i*16 + j]
+            let c = m[(i*16) + j];
+            // Set C[j] to S[c xor l]
+            checksum[j] = PI_SUBST[c as usize ^ l as usize];
+            // Set L to C[j]
+            l = checksum[j];
+        }
+    }
+    output_vec.append(&mut checksum);
+    output_vec
+}
