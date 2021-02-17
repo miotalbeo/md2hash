@@ -1,9 +1,17 @@
 # md2hash
 
 ## About
-This is a custom utility for calculating the MD2 hash of either a string 
-of text or the contents of a file. It is currently unfinished.
+This is a utility for calculating the MD2 hash of either a string of text 
+provided as command-line arguments, or the contents of a file. Differentiation 
+is provided via the `f` (for file) and `s` (for string) switches. 
 
-## Purpose
-The purpose of this project was to learn about implementing hash functions, 
-as such I have implemented the MD2 algorithm from scrath using RFC 1319.
+## Why
+I wanted to learn more about hashing functions, and I wanted to learn more 
+about Rust. I combined these by implementing MD2 from scratch in Rust 
+for my utility.
+
+## Limitations
+The major current limitation is that a file must be able to fit into 
+memory in order for it to be hashed. I'm working on a solution that 
+enables files of any size to be hashed, by reading blocks into a buffer 
+and updating the hash context.
